@@ -4,7 +4,15 @@ os:
 dist: bionic
 
 php:
-  - 7.4
+  - 7.3
+  - 7.2
+  - 7.1
+
+jobs:
+  include:
+    - php: 7.4
+      script:
+        - composer run-script downgrade-upstream
 
 cache:
   directories:
@@ -17,4 +25,4 @@ install:
   - composer update -v
 
 script:
-  - composer run-script downgrade-upstream
+  - composer run-script analyze
