@@ -18,7 +18,7 @@ jobs:
         - composer update -v
       script:
         - composer run-script test
-    - name: "Downgrade from PHP 7.4 to PHP 7.3"
+    - name: "Downgrade from PHP 7.4 to PHP 7.1"
       php: 7.4
       install:
         - composer require --dev --no-update "rector/rector:^0.8.15"
