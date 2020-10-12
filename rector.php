@@ -14,5 +14,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
     $parameters->set(Option::SETS, [
         SetList::DOWNGRADE_PHP74,
+        SetList::DOWNGRADE_PHP73,
+        SetList::DOWNGRADE_PHP72,
     ]);
 };

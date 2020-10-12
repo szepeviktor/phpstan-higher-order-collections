@@ -10,7 +10,8 @@ php:
 
 jobs:
   include:
-    - php: 7.4
+    - name: "Downgrade from PHP 7.4 to PHP 7.3"
+      php: 7.4
       script:
         - composer run-script downgrade-upstream
 
