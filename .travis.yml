@@ -1,0 +1,20 @@
+language: php
+os:
+  - linux
+dist: bionic
+
+php:
+  - 7.4
+
+cache:
+  directories:
+    - "${HOME}/.composer/cache"
+
+before_install:
+  - phpenv config-rm xdebug.ini
+
+install:
+  - composer update -v
+
+script:
+  - composer run-script downgrade-upstream

@@ -21,15 +21,16 @@
     },
     "autoload": {
         "psr-4": {
-            "SzepeViktor\\PHPStan\\HigherOrderCollection\\": "src/"
+            "HOC\\": "src/"
         }
     },
     "scripts": {
         "downgrade-upstream": [
-            "git remote add upstream https://github.com/Sustainabil-IT/phpstan-higher-order-collections.git",
+            "git remote show upstream || git remote add upstream https://github.com/Sustainabil-IT/phpstan-higher-order-collections.git",
             "git fetch upstream",
-            "git checkout upstream/main",
-            "rector process src/"
+            "git checkout upstream/main -- src/",
+            "rector process src/",
+            "git diff -- src/"
         ]
     }
 }
