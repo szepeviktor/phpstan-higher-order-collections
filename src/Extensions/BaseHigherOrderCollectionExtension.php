@@ -1,6 +1,6 @@
 <?php
 
-namespace HOC\Extensions;
+namespace SustainabilIT\PHPStanHOCPlugin\Extensions;
 
 use PHPStan\Type\NeverType;
 use PHPStan\Type\Type;
@@ -8,14 +8,20 @@ use PHPStan\Type\Type;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\ReflectionProvider;
 
-use HOC\Reflections\CollectionPropertyReflection;
-use HOC\Support\ConfigInterface;
+use SustainabilIT\PHPStanHOCPlugin\Reflections\CollectionPropertyReflection;
+use SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface;
 
 abstract class BaseHigherOrderCollectionExtension
 {
-    protected ConfigInterface $config;
+    /**
+     * @var \SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface
+     */
+    protected $config;
 
-    private ReflectionProvider $reflectionProvider;
+    /**
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
 
     public function __construct(ConfigInterface $config, ReflectionProvider $reflectionProvider)
     {
@@ -32,7 +38,9 @@ abstract class BaseHigherOrderCollectionExtension
     protected function mapClassReflections(ClassReflection $reflection, callable $cb) : array
     {
         return array_map(
-            fn (string $class) => $cb($this->reflectionProvider->getClass($class)),
+            function (string $class) use ($cb) {
+                return $cb($this->reflectionProvider->getClass($class));
+            },
             $this->getTemplateType($reflection)->getReferencedClasses()
         );
     }

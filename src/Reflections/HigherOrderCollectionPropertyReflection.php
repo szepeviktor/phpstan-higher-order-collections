@@ -1,6 +1,6 @@
 <?php
 
-namespace HOC\Reflections;
+namespace SustainabilIT\PHPStanHOCPlugin\Reflections;
 
 use PHPStan\Reflection\PropertyReflection;
 use PHPStan\Reflection\ClassReflection;
@@ -9,20 +9,26 @@ use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use PHPStan\Type\NeverType;
 
-use HOC\Support\ConfigInterface;
+use SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface;
 
 class HigherOrderCollectionPropertyReflection implements PropertyReflection
 {
     use AggregatesReflections;
 
-    private ClassReflection $classReflection;
+    /**
+     * @var \PHPStan\Reflection\ClassReflection
+     */
+    private $classReflection;
 
-    private ConfigInterface $config;
+    /**
+     * @var \SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface
+     */
+    private $config;
 
     /**
      * @var PropertyReflection[]
      */
-    private array $reflections;
+    private $reflections;
 
     /**
      * @param PropertyReflection[] $reflections
@@ -52,7 +58,9 @@ class HigherOrderCollectionPropertyReflection implements PropertyReflection
      */
     private function getPropertyTypes(): array
     {
-        return $this->mapReflections(fn (PropertyReflection $property) : Type => $property->getReadableType());
+        return $this->mapReflections(function (PropertyReflection $property) : Type {
+            return $property->getReadableType();
+        });
     }
 
     public function getWritableType(): Type
@@ -67,17 +75,23 @@ class HigherOrderCollectionPropertyReflection implements PropertyReflection
 
     public function isStatic(): bool
     {
-        return $this->checkAnyReflectionsPass(fn (PropertyReflection $property): bool => $property->isStatic());
+        return $this->checkAnyReflectionsPass(function (PropertyReflection $property) : bool {
+            return $property->isStatic();
+        });
     }
 
     public function isPrivate(): bool
     {
-        return $this->checkAnyReflectionsPass(fn (PropertyReflection $property): bool => $property->isPrivate());
+        return $this->checkAnyReflectionsPass(function (PropertyReflection $property) : bool {
+            return $property->isPrivate();
+        });
     }
 
     public function isPublic(): bool
     {
-        return $this->checkAllReflectionsPass(fn (PropertyReflection $property): bool => $property->isPublic());
+        return $this->checkAllReflectionsPass(function (PropertyReflection $property) : bool {
+            return $property->isPublic();
+        });
     }
 
     public function canChangeTypeAfterAssignment(): bool
@@ -87,7 +101,9 @@ class HigherOrderCollectionPropertyReflection implements PropertyReflection
 
     public function isReadable(): bool
     {
-        return $this->checkAllReflectionsPass(fn (PropertyReflection $property): bool => $property->isReadable());
+        return $this->checkAllReflectionsPass(function (PropertyReflection $property) : bool {
+            return $property->isReadable();
+        });
     }
 
     public function isWritable(): bool
@@ -97,25 +113,33 @@ class HigherOrderCollectionPropertyReflection implements PropertyReflection
 
     public function isDeprecated(): TrinaryLogic
     {
-        return $this->trinaryForReflection(fn (PropertyReflection $property): bool => $property->isDeprecated()->no());
+        return $this->trinaryForReflection(function (PropertyReflection $property) : bool {
+            return $property->isDeprecated()->no();
+        });
     }
 
     public function getdocComment(): ?string
     {
-        $messages = $this->mapReflections(fn (PropertyReflection $property): ? string => $property->getDocComment());
+        $messages = $this->mapReflections(function (PropertyReflection $property) : ? string {
+            return $property->getDocComment();
+        });
         
         return implode("\n", array_filter($messages)) ?: null;
     }
 
     public function getDeprecatedDescription(): ?string
     {
-        $messages = $this->mapReflections(fn (PropertyReflection $property): ? string => $property->getDeprecatedDescription());
+        $messages = $this->mapReflections(function (PropertyReflection $property) : ? string {
+            return $property->getDeprecatedDescription();
+        });
         
         return implode("\n", array_filter($messages)) ?: null;
     }
 
     public function isInternal(): TrinaryLogic
     {
-        return $this->trinaryForReflection(fn (PropertyReflection $property): bool => $property->isInternal()->no());
+        return $this->trinaryForReflection(function (PropertyReflection $property) : bool {
+            return $property->isInternal()->no();
+        });
     }
 }

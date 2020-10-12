@@ -1,28 +1,35 @@
 <?php
 
-namespace HOC\Reflections;
+namespace SustainabilIT\PHPStanHOCPlugin\Reflections;
 
 use PHPStan\Reflection\MethodReflection;
+use PHPStan\Reflection\ClassMemberReflection;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 
-use HOC\Support\ConfigInterface;
+use SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface;
 
 class HigherOrderCollectionMethodReflection implements MethodReflection
 {
     use AggregatesReflections;
 
-    private ClassReflection $classReflection;
+    /**
+     * @var \PHPStan\Reflection\ClassReflection
+     */
+    private $classReflection;
 
-    private ConfigInterface $config;
+    /**
+     * @var \SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface
+     */
+    private $config;
     
     /**
      * @var MethodReflection[]
      */
-    private array $reflections;
+    private $reflections;
 
     /**
      * @param MethodReflection[] $reflections
@@ -42,16 +49,18 @@ class HigherOrderCollectionMethodReflection implements MethodReflection
      */
     public function getVariants(): array
     {
-        $decorator = fn (ParametersAcceptor $acceptor) : ParametersAcceptor =>
-            new HigherOrderCollectionParameterAcceptor(
+        $decorator = function (ParametersAcceptor $acceptor) : ParametersAcceptor {
+            return new HigherOrderCollectionParameterAcceptor(
                 $acceptor,
                 $this->classReflection,
                 $this->config
             );
+        };
         
         return array_merge(...$this->mapReflections(
-            fn (MethodReflection $reflection) : array =>
-                array_map($decorator, $reflection->getVariants())
+            function (MethodReflection $reflection) use ($decorator) : array {
+                return array_map($decorator, $reflection->getVariants());
+            }
         ));
     }
 
@@ -62,17 +71,23 @@ class HigherOrderCollectionMethodReflection implements MethodReflection
 
     public function isStatic(): bool
     {
-        return $this->checkAnyReflectionsPass(fn (MethodReflection $method): bool => $method->isStatic());
+        return $this->checkAnyReflectionsPass(function (MethodReflection $method) : bool {
+            return $method->isStatic();
+        });
     }
 
     public function isPrivate(): bool
     {
-        return $this->checkAnyReflectionsPass(fn (MethodReflection $method): bool => $method->isPrivate());
+        return $this->checkAnyReflectionsPass(function (MethodReflection $method) : bool {
+            return $method->isPrivate();
+        });
     }
 
     public function isPublic(): bool
     {
-        return $this->checkAllReflectionsPass(fn (MethodReflection $method): bool => $method->isPublic());
+        return $this->checkAllReflectionsPass(function (MethodReflection $method) : bool {
+            return $method->isPublic();
+        });
     }
 
     public function getName(): string
@@ -80,48 +95,62 @@ class HigherOrderCollectionMethodReflection implements MethodReflection
         return $this->reflections[0]->getName();
     }
 
-    public function getPrototype(): self
+    public function getPrototype(): ClassMemberReflection
     {
         return $this;
     }
 
     public function isDeprecated(): TrinaryLogic
     {
-        return $this->trinaryForReflection(fn (MethodReflection $method): bool => $method->isDeprecated()->no());
+        return $this->trinaryForReflection(function (MethodReflection $method) : bool {
+            return $method->isDeprecated()->no();
+        });
     }
 
     public function getDeprecatedDescription(): ?string
     {
-        $messages = $this->mapReflections(fn (MethodReflection $method): ? string => $method->getDeprecatedDescription());
+        $messages = $this->mapReflections(function (MethodReflection $method) : ? string {
+            return $method->getDeprecatedDescription();
+        });
         
         return implode("\n", array_filter($messages)) ?: null;
     }
 
     public function isFinal(): TrinaryLogic
     {
-        return $this->trinaryForReflection(fn (MethodReflection $method): bool => $method->isFinal()->no());
+        return $this->trinaryForReflection(function (MethodReflection $method) : bool {
+            return $method->isFinal()->no();
+        });
     }
 
     public function isInternal(): TrinaryLogic
     {
-        return $this->trinaryForReflection(fn (MethodReflection $method): bool => $method->isInternal()->no());
+        return $this->trinaryForReflection(function (MethodReflection $method) : bool {
+            return $method->isInternal()->no();
+        });
     }
 
     public function getThrowType(): ? Type
     {
-        $errors = array_filter($this->mapReflections(fn (MethodReflection $method): ? Type => $method->getThrowType()));
+        $errors = array_filter($this->mapReflections(function (MethodReflection $method) : ? Type {
+            return $method->getThrowType();
+        }));
 
         return $errors ? (count($errors) > 1 ? new UnionType($errors) : $errors[0]) : null;
     }
 
     public function hasSideEffects(): TrinaryLogic
     {
-        return $this->trinaryForReflection(fn (MethodReflection $method): bool => $method->hasSideEffects()->no());
+        return $this->trinaryForReflection(function (MethodReflection $method) : bool {
+            return $method->hasSideEffects()->no();
+        });
     }
 
     public function getDocComment(): ?string
     {
-        $messages = $this->mapReflections(fn (MethodReflection $method): ? string => $method->getDocComment());
+        $messages = $this->mapReflections(function (MethodReflection $method) : ? string {
+            return $method->getDocComment();
+        });
         
         return implode("\n", array_filter($messages)) ?: null;
     }

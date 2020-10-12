@@ -1,27 +1,33 @@
 <?php
 
-namespace HOC\Support;
+namespace SustainabilIT\PHPStanHOCPlugin\Support;
 
 class Config implements ConfigInterface
 {
     /**
      * @var class-string
      */
-    private string $collectionClass;
+    private $collectionClass;
 
     /**
      * @var class-string
      */
-    private string $proxyClass;
+    private $proxyClass;
 
     /**
      * @var string[]
      */
-    private array $proxyMethods;
+    private $proxyMethods;
 
-    private string $typeTemplate;
+    /**
+     * @var string
+     */
+    private $typeTemplate;
 
-    private string $proxyTemplate;
+    /**
+     * @var string
+     */
+    private $proxyTemplate;
 
     /**
      * @param class-string $collectionClass

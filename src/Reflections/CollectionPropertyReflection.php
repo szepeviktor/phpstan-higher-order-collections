@@ -1,6 +1,6 @@
 <?php
 
-namespace HOC\Reflections;
+namespace SustainabilIT\PHPStanHOCPlugin\Reflections;
 
 use PHPStan\Analyser\OutOfClassScope;
 
@@ -13,15 +13,24 @@ use PHPStan\Type\UnionType;
 use PHPStan\Type\Generic\GenericObjectType;
 use PHPStan\Type\NeverType;
 
-use HOC\Support\ConfigInterface;
+use SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface;
 
 class CollectionPropertyReflection implements PropertyReflection
 {
-    private ClassReflection $reflector;
+    /**
+     * @var \PHPStan\Reflection\ClassReflection
+     */
+    private $reflector;
 
-    private string $method;
+    /**
+     * @var string
+     */
+    private $method;
     
-    private ConfigInterface $config;
+    /**
+     * @var \SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface
+     */
+    private $config;
 
     /**
      * @param string $method
@@ -48,7 +57,9 @@ class CollectionPropertyReflection implements PropertyReflection
     private function mapAcceptors() : array
     {
         return array_map(
-            fn (ParametersAcceptor $acceptor) : Type => $acceptor->getReturnType(),
+            function (ParametersAcceptor $acceptor) : Type {
+                return $acceptor->getReturnType();
+            },
             $this->reflector->getMethod($this->method, new OutOfClassScope)->getVariants()
         );
     }

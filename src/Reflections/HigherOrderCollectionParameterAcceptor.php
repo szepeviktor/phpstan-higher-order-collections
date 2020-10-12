@@ -1,6 +1,6 @@
 <?php
 
-namespace HOC\Reflections;
+namespace SustainabilIT\PHPStanHOCPlugin\Reflections;
 
 use PHPStan\Type\Generic\TemplateTypeMap;
 use PHPStan\Type\Type;
@@ -8,15 +8,24 @@ use PHPStan\Type\NeverType;
 use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\Reflection\ClassReflection;
 
-use HOC\Support\ConfigInterface;
+use SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface;
 
 class HigherOrderCollectionParameterAcceptor implements ParametersAcceptor
 {
-    private ParametersAcceptor $acceptor;
+    /**
+     * @var \PHPStan\Reflection\ParametersAcceptor
+     */
+    private $acceptor;
 
-    private ClassReflection $reflector;
+    /**
+     * @var \PHPStan\Reflection\ClassReflection
+     */
+    private $reflector;
     
-    private ConfigInterface $config;
+    /**
+     * @var \SustainabilIT\PHPStanHOCPlugin\Support\ConfigInterface
+     */
+    private $config;
 
     public function __construct(ParametersAcceptor $acceptor, ClassReflection $reflector, ConfigInterface $config)
     {
