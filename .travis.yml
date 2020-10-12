@@ -10,8 +10,18 @@ php:
 
 jobs:
   include:
+    - name: "Unit test on PHP 7.4"
+      php: 7.4
+      install:
+        - composer require --dev --no-update "phpunit/phpunit:^9.4" "illuminate/collections:^8.9"
+        - composer update -v
+      script:
+        - composer run-script test
     - name: "Downgrade from PHP 7.4 to PHP 7.3"
       php: 7.4
+      install:
+        - composer require --dev --no-update "rector/rector:^0.8.15"
+        - composer update -v
       script:
         - composer run-script downgrade-upstream
 
