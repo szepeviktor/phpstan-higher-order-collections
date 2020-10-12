@@ -10,7 +10,7 @@ php:
 
 jobs:
   include:
-    - name: "Unit test on PHP 7.4"
+    - name: "Unit tests on PHP 7.4"
       php: 7.4
       install:
         - composer require --dev --no-update "phpunit/phpunit:^9.4" "illuminate/collections:^8.9"
