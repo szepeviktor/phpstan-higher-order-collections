@@ -19,9 +19,14 @@
             "SustainabilIT\\PHPStanHOCPlugin\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "analyze": "phpstan analyze --ansi --level=max src/",
-        "test": "phpunit",
+        "test": "phpunit --verbose",
         "downgrade-upstream": [
             "git remote show upstream || git remote add upstream https://github.com/Sustainabil-IT/phpstan-higher-order-collections.git",
             "git fetch upstream",
